@@ -4,6 +4,7 @@ import {
     ExecutionContext,
     CallHandler,
     BadRequestException,
+    UnauthorizedException,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { UsersService } from '../users.service';
@@ -17,15 +18,19 @@ export class CheckEmailUniqueInterceptor implements NestInterceptor {
         next: CallHandler,
     ): Promise<Observable<any>> {
         const request = context.switchToHttp().getRequest();
-        const { email } = request.body;
+        try {
+            const { email } = request.body;
 
-        const existingUser = await this.usersService.findByEmail(
-            email.toLowerCase(),
-        );
-        if (existingUser) {
-            throw new BadRequestException('Такой email уже существует.');
+            const existingUser = await this.usersService.findByEmail(
+                email.toLowerCase(),
+            );
+            if (existingUser) {
+                throw new BadRequestException('Такой email уже существует.');
+            }
+
+            return next.handle();
+        } catch (e) {
+            throw new UnauthorizedException('Вы не ввывели емайл!');
         }
-
-        return next.handle();
     }
 }

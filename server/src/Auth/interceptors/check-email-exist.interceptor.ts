@@ -1,3 +1,4 @@
+import { UsersService } from '@/Users/users.service';
 import {
     Injectable,
     NestInterceptor,
@@ -6,7 +7,6 @@ import {
     NotFoundException,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { UsersService } from '../users.service';
 
 @Injectable()
 export class CheckEmailExistInterceptor implements NestInterceptor {

@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from './User/user.module';
+import { UsersModule } from './Users/user.module';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
+import { DatabaseModule } from './Database/database.module';
+import { AuthModule } from './Auth/auth.module';
 
 @Module({
     imports: [
@@ -10,7 +12,9 @@ import configuration from './config/configuration';
             load: [configuration],
             isGlobal: true,
         }),
+        DatabaseModule,
         UsersModule,
+        AuthModule,
     ],
 })
 export class AppModule {}
