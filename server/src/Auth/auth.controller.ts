@@ -11,6 +11,8 @@ import { CurrentUser } from './decorators/current-user.decarator';
 import { User } from '@/Users/schema/user.entity';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { JwtRefreshAuthGuard } from './guards/jwt-refresh-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -20,6 +22,15 @@ export class AuthController {
     @UseInterceptors(CheckEmailExistInterceptor)
     @UseGuards(LocalAuthGuard)
     async login(
+        @CurrentUser() user: User,
+        @Res({ passthrough: true }) response: Response,
+    ) {
+        await this.authService.login(user, response);
+    }
+
+    @Post('refresh')
+    @UseGuards(JwtRefreshAuthGuard)
+    async refreshToken(
         @CurrentUser() user: User,
         @Res({ passthrough: true }) response: Response,
     ) {

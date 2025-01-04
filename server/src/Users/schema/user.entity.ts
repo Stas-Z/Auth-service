@@ -9,7 +9,10 @@ export class User {
     email: string;
 
     @Column()
-    password?: string;
+    password: string;
+
+    @Column()
+    refreshToken?: string;
 
     @Column({ default: false })
     isActive: boolean;

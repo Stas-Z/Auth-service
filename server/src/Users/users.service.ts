@@ -3,20 +3,20 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './schema/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import { PasswordHasherService } from '@/utils/password-hasher.service';
+import { DataHasherService } from '@/utils/data-hasher.service';
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectRepository(User)
         private usersRepository: Repository<User>,
-        private readonly passwordHasher: PasswordHasherService,
+        private readonly passwordHasher: DataHasherService,
     ) {}
 
     async create(createUserDto: CreateUserDto): Promise<User> {
         const { password, email } = createUserDto;
 
-        const hashedPassword = await this.passwordHasher.hashPassword(password);
+        const hashedPassword = await this.passwordHasher.hashData(password);
 
         const newUser = this.usersRepository.create({
             email,
@@ -41,5 +41,9 @@ export class UsersService {
 
     async remove(id: number): Promise<void> {
         await this.usersRepository.delete(id);
+    }
+
+    async updateUser(id: Pick<User, 'id'>, data: Partial<User>) {
+        return this.usersRepository.update(id, data);
     }
 }

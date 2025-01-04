@@ -4,18 +4,19 @@ import {
     NotFoundException,
     UnauthorizedException,
 } from '@nestjs/common';
-import { PasswordHasherService } from '@/utils/password-hasher.service';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@/Users/schema/user.entity';
 import { TokenPayload } from './types/token-payload.interface';
 import { Response } from 'express';
+import { hash } from 'bcrypt';
+import { DataHasherService } from '@/utils/data-hasher.service';
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly usersService: UsersService,
-        private readonly passwordHasher: PasswordHasherService,
+        private readonly passwordHasher: DataHasherService,
         private readonly configService: ConfigService,
         private readonly jwtService: JwtService,
     ) {}
@@ -23,6 +24,9 @@ export class AuthService {
     async login(user: User, response: Response) {
         const expiresAccessToken = new Date(
             Date.now() + parseInt(this.configService.get<string>('exptime')),
+        );
+        const expiresRefreshToken = new Date(
+            Date.now() + parseInt(this.configService.get<string>('exprefresh')),
         );
 
         const tokenPayload: TokenPayload = {
@@ -32,10 +36,25 @@ export class AuthService {
             secret: this.configService.get('secret'),
             expiresIn: `${this.configService.get<string>('exptime')}ms`,
         });
+        const refreshToken = this.jwtService.sign(tokenPayload, {
+            secret: this.configService.get('refresh'),
+            expiresIn: `${this.configService.get<string>('exprefresh')}ms`,
+        });
+
+        await this.usersService.updateUser(
+            { id: user.id },
+            { refreshToken: await this.passwordHasher.hashData(refreshToken) },
+        );
+
         response.cookie('Authentication', accesToken, {
             httpOnly: true,
             secure: this.configService.get('NODE_ENV') === 'production',
             expires: expiresAccessToken,
+        });
+        response.cookie('Refresh', refreshToken, {
+            httpOnly: true,
+            secure: this.configService.get('NODE_ENV') === 'production',
+            expires: expiresRefreshToken,
         });
     }
 
@@ -48,7 +67,7 @@ export class AuthService {
             );
         }
 
-        const isPasswordValid = await this.passwordHasher.comparePasswords(
+        const isPasswordValid = await this.passwordHasher.compareData(
             password,
             user.password,
         );
@@ -57,5 +76,22 @@ export class AuthService {
             throw new UnauthorizedException('Неверный пароль.');
         }
         return user;
+    }
+
+    async verifyUserRefreshToken(refreshToken: string, userId: number) {
+        try {
+            const user = await this.usersService.findById(userId);
+            const authenticated = await this.passwordHasher.compareData(
+                refreshToken,
+                user.refreshToken,
+            );
+
+            if (!authenticated) {
+                throw new UnauthorizedException('Вы не авторизированны');
+            }
+            return user;
+        } catch (e) {
+            throw new UnauthorizedException('Refresh токен не валидный');
+        }
     }
 }
