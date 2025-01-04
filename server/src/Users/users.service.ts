@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { User } from './schema/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { DataHasherService } from '@/utils/data-hasher.service';
+import { classToPlain, instanceToPlain } from 'class-transformer';
 
 @Injectable()
 export class UsersService {
@@ -22,7 +23,9 @@ export class UsersService {
             email,
             password: hashedPassword,
         });
-        return await this.usersRepository.save(newUser);
+        const savedUser = await this.usersRepository.save(newUser);
+
+        return instanceToPlain(savedUser) as User;
     }
 
     async findAll(): Promise<User[]> {
