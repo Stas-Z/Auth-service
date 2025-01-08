@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from './Users/user.module';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './Auth/auth.module';
+import { CaptchaModule } from './Captcha/captcha.module';
 import configuration from './config/configuration';
 import { DatabaseModule } from './Database/database.module';
-import { AuthModule } from './Auth/auth.module';
+import { UsersModule } from './Users/user.module';
 
 @Module({
     imports: [
@@ -15,6 +16,7 @@ import { AuthModule } from './Auth/auth.module';
         DatabaseModule,
         UsersModule,
         AuthModule,
+        CaptchaModule,
     ],
 })
 export class AppModule {}

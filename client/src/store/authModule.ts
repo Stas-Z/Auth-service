@@ -15,10 +15,8 @@ const mutations: MutationTree<UserSchema> & AuthMutations = {
         localStorage.setItem(USER_LOCALSTORAGE_KEY, 'true');
     },
     setLogout(state) {
-        if (state.currentUser) {
-            state.isAuth = false;
-            localStorage.removeItem(USER_LOCALSTORAGE_KEY);
-        }
+        state.isAuth = false;
+        localStorage.removeItem(USER_LOCALSTORAGE_KEY);
     },
 };
 

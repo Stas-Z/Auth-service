@@ -8,18 +8,23 @@
         <a-typography-link v-if="message && isRegistration && !errorMessage">
             {{ message }}
         </a-typography-link>
-        <a-typography-text v-if="errorMessage" type="danger">{{
+        <a-typography-text v-if="errorMessage && !message" type="danger">{{
             errorMessage
         }}</a-typography-text>
     </div>
 </template>
 
 <script lang="ts" setup>
-defineProps<{
-    isRegistration?: boolean;
-    message?: string;
-    errorMessage?: string;
-}>();
+withDefaults(
+    defineProps<{
+        isRegistration?: boolean;
+        message?: string;
+        errorMessage?: string;
+    }>(),
+    {
+        isRegistration: false,
+    },
+);
 </script>
 
 <style scoped></style>

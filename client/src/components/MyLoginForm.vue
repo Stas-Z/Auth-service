@@ -2,13 +2,18 @@
     <h2 class="title">
         {{ isRegistration ? 'Регистрация' : 'Авторизация' }}
     </h2>
+    <my-notice
+        class="notice"
+        :message="message"
+        :error-message="errorMessage"
+        :is-registration="isRegistration"
+    />
     <a-form
         :model="formState"
         name="basic"
         :label-col="{ span: 8 }"
         :wrapper-col="{ span: 16 }"
         autocomplete="off"
-        @finish="onFinish"
         @submit.prevent="handleSubmitOrRegistration"
         ref="formRef"
     >
@@ -39,11 +44,7 @@
         </a-form-item>
 
         <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
-            <my-notice
-                :message="message"
-                :error-message="errorMessage"
-                :is-registration="isRegistration"
-            />
+            <my-captcha v-model="isCaptchaValid" />
         </a-form-item>
 
         <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
@@ -58,13 +59,15 @@
 import { useInit } from '@/hooks/useInit';
 import { useSubmit } from '@/hooks/useSubmit';
 import { IUser } from '@/types/user';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import MyCaptcha from './MyCaptcha.vue';
 import MyNotice from './MyNotice.vue';
 
 const formRef = ref();
 const props = defineProps<{
     isRegistration?: boolean;
 }>();
+const isCaptchaValid = ref(false);
 
 const formState = ref<IUser>({
     email: '',
@@ -73,25 +76,28 @@ const formState = ref<IUser>({
 
 const { initUser } = useInit();
 
-const onFinish = () => {
-    props.isRegistration
-        ? (message.value = 'Регистрация...')
-        : (message.value = 'Авторизация...');
-};
-
 const { handleSubmit, isLoading, handleRegistration, errorMessage, message } =
     useSubmit(formState, initUser);
+
 const handleSubmitOrRegistration = () => {
+    if (!isCaptchaValid.value) {
+        errorMessage.value = 'Пожалуйста, пройдите капчу!';
+        return;
+    }
     if (props.isRegistration) {
         handleRegistration();
     } else {
         handleSubmit();
     }
 };
+watch(isCaptchaValid, () => {
+    errorMessage.value = '';
+});
 </script>
 
 <style scoped>
-.title {
+.title,
+.notice {
     display: flex;
     justify-content: center;
     margin-bottom: 20px;

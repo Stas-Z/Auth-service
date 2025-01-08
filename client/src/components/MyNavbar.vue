@@ -11,17 +11,10 @@
 </template>
 
 <script lang="ts" setup>
-import router from '@/router/router';
-import { useStore } from '@/store';
-import { computed } from 'vue';
+import { useNavbar } from '@/hooks/useNavbar';
 import MyLogo from './MyLogo.vue';
 
-const store = useStore();
-const isAuth = computed(() => store.getters['auth/getIsAuth']);
-const logout = () => {
-    store.commit('auth/setLogout');
-    router.push('/auth');
-};
+const { isAuth, logout } = useNavbar();
 </script>
 
 <style scoped>

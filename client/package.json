@@ -8,6 +8,7 @@
         "build:prod:server": "cross-env VUE_APP_API_URL=https://server-todoapp-6oxg.onrender.com/api vue-cli-service build --mode production"
     },
     "dependencies": {
+        "@ant-design/icons-vue": "^7.0.1",
         "ant-design-vue": "^4.2.6",
         "axios": "^1.7.9",
         "core-js": "^3.8.3",

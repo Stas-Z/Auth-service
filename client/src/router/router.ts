@@ -1,6 +1,7 @@
 import AuthPage from '@/pages/AuthPage.vue';
 import MainPage from '@/pages/MainPage.vue';
 import RegPage from '@/pages/RegPage.vue';
+import { USER_LOCALSTORAGE_KEY } from '@/shared/consts/localstorage';
 import store from '@/store';
 import { createRouter, createWebHistory } from 'vue-router';
 
@@ -31,7 +32,9 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    const isAuthenticated = store.getters['auth/getIsAuth'];
+    const isAuthenticated =
+        store.getters['auth/getIsAuth'] ||
+        localStorage.getItem(USER_LOCALSTORAGE_KEY);
 
     if (to.meta.requiresAuth && !isAuthenticated) {
         next({ name: 'Login' });
