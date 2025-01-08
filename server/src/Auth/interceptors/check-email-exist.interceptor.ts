@@ -1,9 +1,9 @@
 import { UsersService } from '@/Users/users.service';
 import {
+    CallHandler,
+    ExecutionContext,
     Injectable,
     NestInterceptor,
-    ExecutionContext,
-    CallHandler,
     NotFoundException,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
@@ -17,6 +17,7 @@ export class CheckEmailExistInterceptor implements NestInterceptor {
         next: CallHandler,
     ): Promise<Observable<any>> {
         const request = context.switchToHttp().getRequest();
+
         const { email } = request.body;
 
         const existingUser = await this.usersService.findByEmail(

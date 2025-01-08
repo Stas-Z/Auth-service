@@ -2,11 +2,18 @@
     "compilerOptions": {
         "target": "esnext",
         "module": "esnext",
-        "strict": true,
         "jsx": "preserve",
         "moduleResolution": "node",
         "skipLibCheck": true,
         "esModuleInterop": true,
+        "noImplicitAny": true,
+        "strict": true,
+        "alwaysStrict": true,
+        "strictBindCallApply": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictPropertyInitialization": true,
+        "noImplicitThis": true,
         "allowSyntheticDefaultImports": true,
         "forceConsistentCasingInFileNames": true,
         "useDefineForClassFields": true,
@@ -23,6 +30,7 @@
         "src/**/*.tsx",
         "src/**/*.vue",
         "tests/**/*.ts",
+        "src/**/*.d.ts",
         "tests/**/*.tsx"
     ],
     "exclude": ["node_modules"]

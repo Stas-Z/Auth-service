@@ -1,9 +1,12 @@
 <template>
-    <div>Работатет!</div>
+    <my-navbar></my-navbar>
+    <div class="app">
+        <router-view></router-view>
+    </div>
 </template>
 
-<script>
-export default {};
+<script lang="ts" setup>
+import MyNavbar from './components/MyNavbar.vue';
 </script>
 
 <style></style>

@@ -1,9 +1,9 @@
 import {
+    BadRequestException,
+    CallHandler,
+    ExecutionContext,
     Injectable,
     NestInterceptor,
-    ExecutionContext,
-    CallHandler,
-    BadRequestException,
     UnauthorizedException,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
@@ -18,19 +18,32 @@ export class CheckEmailUniqueInterceptor implements NestInterceptor {
         next: CallHandler,
     ): Promise<Observable<any>> {
         const request = context.switchToHttp().getRequest();
+
         try {
             const { email } = request.body;
+
+            if (!email) {
+                throw new UnauthorizedException('Вы не ввели email!');
+            }
 
             const existingUser = await this.usersService.findByEmail(
                 email.toLowerCase(),
             );
+
             if (existingUser) {
                 throw new BadRequestException('Такой email уже существует.');
             }
 
             return next.handle();
         } catch (e) {
-            throw new UnauthorizedException('Вы не ввывели емайл!');
+            if (
+                e instanceof BadRequestException ||
+                e instanceof UnauthorizedException
+            ) {
+                throw e;
+            }
+            console.error(e);
+            throw new BadRequestException('Ошибка обработки запроса');
         }
     }
 }

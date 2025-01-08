@@ -1,10 +1,10 @@
+import { DataHasherService } from '@/utils/data-hasher.service';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { instanceToPlain } from 'class-transformer';
 import { Repository } from 'typeorm';
-import { User } from './schema/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import { DataHasherService } from '@/utils/data-hasher.service';
-import { classToPlain, instanceToPlain } from 'class-transformer';
+import { User } from './schema/user.entity';
 
 @Injectable()
 export class UsersService {

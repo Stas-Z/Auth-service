@@ -1,4 +1,6 @@
+import { User } from '@/Users/schema/user.entity';
 import { UsersService } from '@/Users/users.service';
+import { DataHasherService } from '@/utils/data-hasher.service';
 import {
     Injectable,
     NotFoundException,
@@ -6,11 +8,9 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '@/Users/schema/user.entity';
-import { TokenPayload } from './types/token-payload.interface';
+import { instanceToPlain } from 'class-transformer';
 import { Response } from 'express';
-import { hash } from 'bcrypt';
-import { DataHasherService } from '@/utils/data-hasher.service';
+import { TokenPayload } from './types/token-payload.interface';
 
 @Injectable()
 export class AuthService {
@@ -56,6 +56,11 @@ export class AuthService {
             secure: this.configService.get('NODE_ENV') === 'production',
             expires: expiresRefreshToken,
         });
+
+        return response.json({
+            id: user.id,
+            email: user.email,
+        });
     }
 
     async verifyUser(email: string, password: string) {
@@ -93,5 +98,12 @@ export class AuthService {
         } catch (e) {
             throw new UnauthorizedException('Refresh токен не валидный');
         }
+    }
+    async authorization(response: Response) {
+        try {
+            const user = response.req.user;
+
+            return response.json(instanceToPlain(user));
+        } catch (e) {}
     }
 }

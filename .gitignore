@@ -3,6 +3,9 @@
 */node_modules
 /build
 
+#personal
+vetur.config.js
+
 # Logs
 logs
 *.log
