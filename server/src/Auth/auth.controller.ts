@@ -29,12 +29,12 @@ export class AuthController {
     @UseGuards(LocalAuthGuard)
     @UseGuards(JwtCaptchaGuard)
     async login(
-        @Body('captchaInput') captcha: string,
+        @Body('captchaInput') captchaInput: string,
         @CaptchaText() captchaText: string,
         @CurrentUser() user: User,
         @Res({ passthrough: true }) response: Response,
     ) {
-        await this.captchaService.verifyCaptcha(captchaText, captcha);
+        await this.captchaService.verifyCaptcha(captchaText, captchaInput);
         await this.authService.login(user, response);
     }
 

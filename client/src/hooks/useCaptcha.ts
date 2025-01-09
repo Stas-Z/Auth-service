@@ -34,7 +34,7 @@ export function useCaptcha(captchaInput: Ref<string>) {
             const response = await $api.post(
                 'captcha/verify',
                 {
-                    captcha: captchaInput.value,
+                    captchaInput: captchaInput.value,
                 },
                 {
                     withCredentials: true,

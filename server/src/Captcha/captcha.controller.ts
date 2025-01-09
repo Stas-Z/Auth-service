@@ -16,10 +16,15 @@ export class CaptchaController {
     @Post('verify')
     @UseGuards(JwtCaptchaGuard)
     async verifyCaptcha(
-        @Body('captcha')
-        captcha: string,
+        @Body('captchaInput')
+        captchaInput: string,
         @CaptchaText() captchaText: string,
+        @Res({ passthrough: true }) response: Response,
     ) {
-        await this.captchaService.verifyCaptcha(captchaText, captcha);
+        await this.captchaService.verifyCaptcha(
+            captchaText,
+            captchaInput,
+            response,
+        );
     }
 }

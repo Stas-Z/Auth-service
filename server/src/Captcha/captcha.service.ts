@@ -41,11 +41,15 @@ export class CaptchaService {
         return response;
     }
 
-    async verifyCaptcha(captchaText: string, captcha: string) {
-        const isValid = captcha === captchaText;
+    async verifyCaptcha(
+        captchaText: string,
+        captchaInput: string,
+        response?: Response,
+    ) {
+        const isValid = captchaInput === captchaText;
 
         if (isValid) {
-            return { success: true };
+            return response?.json({ success: true });
         } else {
             throw new HttpException(
                 'Вы не прошли капчу',
