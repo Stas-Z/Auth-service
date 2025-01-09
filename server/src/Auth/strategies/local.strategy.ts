@@ -8,9 +8,10 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     constructor(private readonly authService: AuthService) {
         super({
             usernameField: 'email',
+            passReqToCallback: true,
         });
     }
-    async validate(email: string, password: string) {
+    async validate(req: Request, email: string, password: string) {
         return this.authService.verifyUser(email, password);
     }
 }

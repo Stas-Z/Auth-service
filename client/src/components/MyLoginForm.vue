@@ -44,7 +44,10 @@
         </a-form-item>
 
         <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
-            <my-captcha v-model="isCaptchaValid" />
+            <my-captcha
+                v-model:is-valid="isCaptchaValid"
+                v-model:captcha-input="formState.captchaInput"
+            />
         </a-form-item>
 
         <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
@@ -72,6 +75,7 @@ const isCaptchaValid = ref(false);
 const formState = ref<IUser>({
     email: '',
     password: '',
+    captchaInput: '',
 });
 
 const { initUser } = useInit();

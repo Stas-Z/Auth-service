@@ -1,5 +1,9 @@
+import { CaptchaService } from '@/Captcha/captcha.service';
+import { CaptchaText } from '@/Captcha/decorators/captha-text.decorator';
+import { JwtCaptchaGuard } from '@/Captcha/guards/jwt-captcha.guard';
 import { User } from '@/Users/schema/user.entity';
 import {
+    Body,
     Controller,
     Post,
     Res,
@@ -16,15 +20,21 @@ import { CheckEmailExistInterceptor } from './interceptors/check-email-exist.int
 
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) {}
-
+    constructor(
+        private readonly authService: AuthService,
+        private readonly captchaService: CaptchaService,
+    ) {}
     @Post('login')
     @UseInterceptors(CheckEmailExistInterceptor)
     @UseGuards(LocalAuthGuard)
+    @UseGuards(JwtCaptchaGuard)
     async login(
+        @Body('captchaInput') captcha: string,
+        @CaptchaText() captchaText: string,
         @CurrentUser() user: User,
         @Res({ passthrough: true }) response: Response,
     ) {
+        await this.captchaService.verifyCaptcha(captchaText, captcha);
         await this.authService.login(user, response);
     }
 

@@ -43,6 +43,7 @@ export class CaptchaService {
 
     async verifyCaptcha(captchaText: string, captcha: string) {
         const isValid = captcha === captchaText;
+
         if (isValid) {
             return { success: true };
         } else {

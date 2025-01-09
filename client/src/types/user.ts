@@ -6,6 +6,7 @@ export interface IUser {
     email: string;
     password: string;
     isActive?: boolean;
+    captchaInput?: string;
 }
 
 export interface UserSchema {

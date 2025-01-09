@@ -17,7 +17,7 @@
         <my-notice :message="message" :error-message="errorMessage" />
 
         <a-input-search
-            v-model:value="captchaInput"
+            v-model:value="localCaptchaInput"
             placeholder="Введите текст с картинки"
         >
             <template #enterButton>
@@ -38,14 +38,13 @@ import { useCaptcha } from '@/hooks/useCaptcha';
 import { ref, watch } from 'vue';
 import MyNotice from './MyNotice.vue';
 
-const captchaInput = ref('');
-
 defineProps<{
-    modelValue: boolean;
+    captchaInput?: string;
+    isValid: boolean;
 }>();
 
-const emit = defineEmits(['update:modelValue']);
-
+const emit = defineEmits(['update:captchaInput', 'update:isValid']);
+const localCaptchaInput = ref('');
 const {
     captcha,
     refreshCaptcha,
@@ -54,16 +53,20 @@ const {
     errorMessage,
     message,
     isCaptchaValid,
-} = useCaptcha(captchaInput);
+} = useCaptcha(localCaptchaInput);
 
 watch(isCaptchaValid, () => {
-    emit('update:modelValue', true);
+    emit('update:isValid', true);
     errorMessage.value = '';
+});
+
+watch(localCaptchaInput, (newValue) => {
+    emit('update:captchaInput', newValue);
 });
 
 const onClickRefresh = () => {
     refreshCaptcha();
-    emit('update:modelValue', false);
+    emit('update:isValid', false);
     message.value = '';
     errorMessage.value = '';
 };
