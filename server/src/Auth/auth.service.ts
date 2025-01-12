@@ -1,3 +1,4 @@
+import { IConfig } from '@/config/configuration';
 import { User } from '@/Users/schema/user.entity';
 import { UsersService } from '@/Users/users.service';
 import { DataHasherService } from '@/utils/data-hasher.service';
@@ -8,7 +9,6 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { instanceToPlain } from 'class-transformer';
 import { Response } from 'express';
 import { TokenPayload } from './types/token-payload.interface';
 
@@ -17,7 +17,7 @@ export class AuthService {
     constructor(
         private readonly usersService: UsersService,
         private readonly passwordHasher: DataHasherService,
-        private readonly configService: ConfigService,
+        private readonly configService: ConfigService<IConfig>,
         private readonly jwtService: JwtService,
     ) {}
 
@@ -94,16 +94,10 @@ export class AuthService {
             if (!authenticated) {
                 throw new UnauthorizedException('Вы не авторизированны');
             }
+
             return user;
         } catch (e) {
             throw new UnauthorizedException('Refresh токен не валидный');
         }
-    }
-    async authorization(response: Response) {
-        try {
-            const user = response.req.user;
-
-            return response.json(instanceToPlain(user));
-        } catch (e) {}
     }
 }

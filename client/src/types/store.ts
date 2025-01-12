@@ -1,11 +1,9 @@
-import { Store } from 'vuex';
-import { UserSchema } from './user';
-
-export type UserModule = Store<{ auth: UserSchema }>;
+import { UserModule, UserSchema } from './user';
 
 export interface StateProps {
     state: {
         auth: UserSchema;
+        isLoading: boolean;
     };
 }
 export type RootState = StateProps['state'];

@@ -1,5 +1,4 @@
 import router from '@/router/router';
-import { USER_LOCALSTORAGE_KEY } from '@/shared/consts/localstorage';
 import { onMounted, ref, watch } from 'vue';
 import { useStore } from 'vuex';
 
@@ -8,9 +7,7 @@ export function useNavbar() {
     const isAuth = ref(false);
 
     const updateAuthState = () => {
-        isAuth.value =
-            store.getters['auth/getIsAuth'] ||
-            localStorage.getItem(USER_LOCALSTORAGE_KEY);
+        isAuth.value = store.getters['auth/getIsAuth'];
     };
     watch(
         () => store.getters['auth/getIsAuth'],

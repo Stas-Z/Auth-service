@@ -1,8 +1,7 @@
 import { JwtCaptchaGuard } from '@/Captcha/guards/jwt-captcha.guard';
-import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { CaptchaService } from './captcha.service';
-import { CaptchaText } from './decorators/captha-text.decorator';
 
 @Controller('captcha')
 export class CaptchaController {
@@ -15,16 +14,7 @@ export class CaptchaController {
 
     @Post('verify')
     @UseGuards(JwtCaptchaGuard)
-    async verifyCaptcha(
-        @Body('captchaInput')
-        captchaInput: string,
-        @CaptchaText() captchaText: string,
-        @Res({ passthrough: true }) response: Response,
-    ) {
-        await this.captchaService.verifyCaptcha(
-            captchaText,
-            captchaInput,
-            response,
-        );
+    async verifyCaptcha(@Res() response: Response) {
+        return response?.json({ success: true });
     }
 }

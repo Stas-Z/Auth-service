@@ -59,7 +59,6 @@
 </template>
 
 <script lang="ts" setup>
-import { useInit } from '@/hooks/useInit';
 import { useSubmit } from '@/hooks/useSubmit';
 import { IUser } from '@/types/user';
 import { ref, watch } from 'vue';
@@ -78,10 +77,8 @@ const formState = ref<IUser>({
     captchaInput: '',
 });
 
-const { initUser } = useInit();
-
 const { handleSubmit, isLoading, handleRegistration, errorMessage, message } =
-    useSubmit(formState, initUser);
+    useSubmit(formState);
 
 const handleSubmitOrRegistration = () => {
     if (!isCaptchaValid.value) {

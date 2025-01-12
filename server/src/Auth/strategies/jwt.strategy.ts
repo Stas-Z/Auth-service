@@ -1,3 +1,4 @@
+import { IConfig } from '@/config/configuration';
 import { UsersService } from '@/Users/users.service';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -9,7 +10,7 @@ import { TokenPayload } from '../types/token-payload.interface';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor(
-        configService: ConfigService,
+        configService: ConfigService<IConfig>,
         private readonly usersService: UsersService,
     ) {
         super({

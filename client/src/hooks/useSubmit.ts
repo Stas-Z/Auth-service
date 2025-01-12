@@ -1,20 +1,15 @@
 import router from '@/router/router';
 import { $api } from '@/shared/api/api';
-import { USER_LOCALSTORAGE_KEY } from '@/shared/consts/localstorage';
 import { useStore } from '@/store';
 import { IUser } from '@/types/user';
 import { AxiosError } from 'axios';
-import { onMounted, Ref, ref } from 'vue';
+import { Ref, ref } from 'vue';
 
-export function useSubmit(
-    formState: Ref<IUser>,
-    initUser: () => Promise<void>,
-) {
+export function useSubmit(formState: Ref<IUser>) {
     const store = useStore();
     const isLoading = ref(false);
     const message = ref('');
     const errorMessage = ref('');
-    const isAuth = localStorage.getItem(USER_LOCALSTORAGE_KEY);
 
     const handleSubmit = async () => {
         try {
@@ -22,14 +17,9 @@ export function useSubmit(
             const response = await $api.post<IUser>(
                 'auth/login',
                 formState.value,
-                {
-                    withCredentials: true,
-                },
             );
             message.value = 'Авторизация прошла успешно';
             store.commit('auth/setCurentUser', response.data);
-
-            initUser();
 
             setTimeout(() => {
                 router.push({ name: 'MainPage' });
@@ -51,12 +41,13 @@ export function useSubmit(
     const handleRegistration = async () => {
         try {
             isLoading.value = true;
-            const response = await $api.post<IUser>('users', formState.value, {
-                withCredentials: true,
-            });
+
+            const response = await $api.post<IUser>('users', formState.value);
+
             message.value = 'Регистрация прошла успешно';
+
             store.commit('auth/setCurentUser', response.data);
-            initUser();
+
             setTimeout(() => {
                 router.push({ name: 'MainPage' });
             }, 1500);
@@ -72,9 +63,7 @@ export function useSubmit(
             isLoading.value = false;
         }
     };
-    onMounted(() => {
-        isAuth && initUser();
-    });
+
     return {
         handleSubmit,
         handleRegistration,

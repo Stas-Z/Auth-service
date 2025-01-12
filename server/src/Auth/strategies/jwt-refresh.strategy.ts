@@ -1,3 +1,4 @@
+import { IConfig } from '@/config/configuration';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
@@ -12,7 +13,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
     'jwt-refresh',
 ) {
     constructor(
-        configService: ConfigService,
+        configService: ConfigService<IConfig>,
         private readonly authService: AuthService,
     ) {
         super({

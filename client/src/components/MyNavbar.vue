@@ -2,11 +2,11 @@
     <div class="navbar">
         <my-logo @click="$router.push('/')" class="navbar__logo" />
         <div>Auth service</div>
-        <div class="navbar__links" v-if="!isAuth">
+        <div v-if="!isAuth" class="navbar__links">
             <div @click="$router.push('/auth')">Вход</div>
             <div @click="$router.push('/registration')">Регистрация</div>
         </div>
-        <div class="navbar__links" v-else><div @click="logout">Выйти</div></div>
+        <div v-else class="navbar__links"><div @click="logout">Выйти</div></div>
     </div>
 </template>
 

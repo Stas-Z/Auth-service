@@ -11,9 +11,7 @@ export function useCaptcha(captchaInput: Ref<string>) {
 
     const getCaptcha = async () => {
         try {
-            const response = await $api.get('captcha', {
-                withCredentials: true,
-            });
+            const response = await $api.get('captcha');
 
             captcha.value = response.data;
         } catch (error: any) {
@@ -31,15 +29,9 @@ export function useCaptcha(captchaInput: Ref<string>) {
         isLoading.value = true;
 
         try {
-            const response = await $api.post(
-                'captcha/verify',
-                {
-                    captchaInput: captchaInput.value,
-                },
-                {
-                    withCredentials: true,
-                },
-            );
+            const response = await $api.post('captcha/verify', {
+                captchaInput: captchaInput.value,
+            });
             message.value = 'Вы прошли капчу успешно';
             isCaptchaValid.value = true;
 

@@ -1,4 +1,5 @@
 import { TokenPayload } from '@/Auth/types/token-payload.interface';
+import { IConfig } from '@/config/configuration';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -8,7 +9,7 @@ import * as svgCaptcha from 'svg-captcha';
 @Injectable()
 export class CaptchaService {
     constructor(
-        private readonly configService: ConfigService,
+        private readonly configService: ConfigService<IConfig>,
         private readonly jwtService: JwtService,
     ) {}
     async generateCaptcha(response: Response) {
@@ -41,20 +42,13 @@ export class CaptchaService {
         return response;
     }
 
-    async verifyCaptcha(
-        captchaText: string,
-        captchaInput: string,
-        response?: Response,
-    ) {
-        const isValid = captchaInput === captchaText;
-
-        if (isValid) {
-            return response?.json({ success: true });
-        } else {
+    async verifyCaptcha(captchaText: string, captchaInput: string) {
+        if (captchaInput !== captchaText) {
             throw new HttpException(
                 'Вы не прошли капчу',
                 HttpStatus.BAD_REQUEST,
             );
         }
+        return true;
     }
 }

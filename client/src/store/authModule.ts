@@ -4,9 +4,7 @@ import type { AuthGetters, IUser } from '@/types/user';
 import { AuthMutations, UserSchema } from '@/types/user';
 import { GetterTree, Module, MutationTree } from 'vuex';
 
-const state: () => UserSchema = () => ({
-    isAuth: false,
-});
+const state: () => UserSchema = () => ({});
 
 const mutations: MutationTree<UserSchema> & AuthMutations = {
     setCurentUser(state, user: IUser) {
@@ -15,6 +13,7 @@ const mutations: MutationTree<UserSchema> & AuthMutations = {
         localStorage.setItem(USER_LOCALSTORAGE_KEY, 'true');
     },
     setLogout(state) {
+        state.currentUser = null;
         state.isAuth = false;
         localStorage.removeItem(USER_LOCALSTORAGE_KEY);
     },

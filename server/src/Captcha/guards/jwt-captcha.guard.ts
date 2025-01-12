@@ -1,3 +1,4 @@
+import { IConfig } from '@/config/configuration';
 import {
     CanActivate,
     ExecutionContext,
@@ -7,18 +8,21 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
+import { CaptchaService } from '../captcha.service';
 
 @Injectable()
 export class JwtCaptchaGuard implements CanActivate {
     constructor(
         private readonly jwtService: JwtService,
-        private readonly configService: ConfigService,
+        private readonly configService: ConfigService<IConfig>,
+        private readonly captchaService: CaptchaService,
     ) {}
 
-    canActivate(context: ExecutionContext): boolean {
+    async canActivate(context: ExecutionContext): Promise<boolean> {
         const request = context.switchToHttp().getRequest<Request>();
-
         const token = request.cookies?.CaptchaSession;
+        const captchaInput = request.body.captchaInput;
+
         if (!token) {
             throw new UnauthorizedException('Токен отсутствует');
         }
@@ -28,12 +32,14 @@ export class JwtCaptchaGuard implements CanActivate {
                 secret: this.configService.get<string>('secret'),
             });
 
-            request['captchaText'] = payload.captchaText;
-
             if (!payload.captchaText) {
                 throw new UnauthorizedException('Неверный payload капчи');
             }
-            return true;
+
+            return await this.captchaService.verifyCaptcha(
+                payload.captchaText,
+                captchaInput,
+            );
         } catch (error) {
             throw new UnauthorizedException('Неверный токен капчи');
         }

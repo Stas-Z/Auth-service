@@ -1,9 +1,7 @@
 import { CaptchaService } from '@/Captcha/captcha.service';
-import { CaptchaText } from '@/Captcha/decorators/captha-text.decorator';
 import { JwtCaptchaGuard } from '@/Captcha/guards/jwt-captcha.guard';
 import { User } from '@/Users/schema/user.entity';
 import {
-    Body,
     Controller,
     Post,
     Res,
@@ -13,7 +11,6 @@ import {
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { CurrentUser } from './decorators/current-user.decarator';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { JwtRefreshAuthGuard } from './guards/jwt-refresh-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { CheckEmailExistInterceptor } from './interceptors/check-email-exist.interceptor';
@@ -29,12 +26,9 @@ export class AuthController {
     @UseGuards(LocalAuthGuard)
     @UseGuards(JwtCaptchaGuard)
     async login(
-        @Body('captchaInput') captchaInput: string,
-        @CaptchaText() captchaText: string,
         @CurrentUser() user: User,
         @Res({ passthrough: true }) response: Response,
     ) {
-        await this.captchaService.verifyCaptcha(captchaText, captchaInput);
         await this.authService.login(user, response);
     }
 
@@ -45,11 +39,5 @@ export class AuthController {
         @Res({ passthrough: true }) response: Response,
     ) {
         await this.authService.login(user, response);
-    }
-
-    @Post()
-    @UseGuards(JwtAuthGuard)
-    async authorization(@Res({ passthrough: true }) response: Response) {
-        await this.authService.authorization(response);
     }
 }
