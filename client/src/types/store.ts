@@ -2,7 +2,7 @@ import { UserModule, UserSchema } from './user';
 
 export interface StateProps {
     state: {
-        auth: UserSchema;
+        auth?: UserSchema;
         isLoading: boolean;
     };
 }

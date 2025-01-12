@@ -22,7 +22,7 @@ export interface AuthGetters {
     getIsAuth(state: UserSchema): UserSchema['isAuth'];
 }
 
-export type UserModule = Store<{ auth: UserSchema }>;
+export type UserModule = Store<{ auth?: UserSchema }>;
 
 // type MyAuthActionContext = ActionContext<UserSchema, RootState>;
 
