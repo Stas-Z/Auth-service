@@ -1,14 +1,12 @@
 <template>
     <div>
-        <a-typography-text
-            type="success"
-            v-if="message && !isRegistration && !errorMessage"
-            >{{ message }}</a-typography-text
-        >
-        <a-typography-link v-if="message && isRegistration && !errorMessage">
+        <a-typography-text type="success" v-if="message && !isRegistration">{{
+            message
+        }}</a-typography-text>
+        <a-typography-link v-else-if="message && isRegistration">
             {{ message }}
         </a-typography-link>
-        <a-typography-text v-if="errorMessage && !message" type="danger">{{
+        <a-typography-text v-else-if="errorMessage && !message" type="danger">{{
             errorMessage
         }}</a-typography-text>
     </div>

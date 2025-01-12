@@ -1,19 +1,20 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Param,
-    Delete,
-    UseInterceptors,
-    UseGuards,
-} from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './schema/user.entity';
-import { CheckEmailUniqueInterceptor } from './interceptors/check-email-unique.interceptor';
-import { JwtAuthGuard } from '@/Auth/guards/jwt-auth.guard';
 import { CurrentUser } from '@/Auth/decorators/current-user.decarator';
+import { JwtAuthGuard } from '@/Auth/guards/jwt-auth.guard';
+import { JwtCaptchaGuard } from '@/Captcha/guards/jwt-captcha.guard';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Post,
+    UseGuards,
+    UseInterceptors,
+} from '@nestjs/common';
+import { CreateUserDto } from './dto/create-user.dto';
+import { CheckEmailUniqueInterceptor } from './interceptors/check-email-unique.interceptor';
+import { User } from './schema/user.entity';
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
@@ -21,6 +22,7 @@ export class UsersController {
 
     @Post()
     @UseInterceptors(CheckEmailUniqueInterceptor)
+    @UseGuards(JwtCaptchaGuard)
     async create(@Body() createUserDto: CreateUserDto): Promise<User> {
         return this.usersService.create(createUserDto);
     }

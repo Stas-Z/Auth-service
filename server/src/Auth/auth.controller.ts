@@ -1,4 +1,3 @@
-import { CaptchaService } from '@/Captcha/captcha.service';
 import { JwtCaptchaGuard } from '@/Captcha/guards/jwt-captcha.guard';
 import { User } from '@/Users/schema/user.entity';
 import {
@@ -17,10 +16,7 @@ import { CheckEmailExistInterceptor } from './interceptors/check-email-exist.int
 
 @Controller('auth')
 export class AuthController {
-    constructor(
-        private readonly authService: AuthService,
-        private readonly captchaService: CaptchaService,
-    ) {}
+    constructor(private readonly authService: AuthService) {}
     @Post('login')
     @UseInterceptors(CheckEmailExistInterceptor)
     @UseGuards(LocalAuthGuard)

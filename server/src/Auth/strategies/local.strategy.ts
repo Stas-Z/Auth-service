@@ -11,7 +11,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
             passReqToCallback: true,
         });
     }
-    async validate(req: Request, email: string, password: string) {
+    async validate(_req: Request, email: string, password: string) {
         return this.authService.verifyUser(email, password);
     }
 }
