@@ -43,7 +43,7 @@
             <a-input-password v-model:value="formState.password" />
         </a-form-item>
 
-        <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
+        <a-form-item label="Капча" name="captcha" :rules="[{ required: true }]">
             <my-captcha
                 v-model:is-valid="isCaptchaValid"
                 v-model:captcha-input="formState.captchaInput"
