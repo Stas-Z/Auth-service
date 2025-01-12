@@ -1,20 +1,34 @@
 <template>
     <div class="navbar">
-        <my-logo @click="$router.push('/')" class="navbar__logo" />
+        <my-logo
+            @click="$router.push({ name: AppRoutes.MAIN_PAGE })"
+            class="navbar__logo"
+        />
         <div>Auth service</div>
         <div v-if="!isAuth" class="navbar__links">
-            <div @click="$router.push('/auth')">Вход</div>
-            <div @click="$router.push('/registration')">Регистрация</div>
+            <div @click="$router.push({ name: AppRoutes.AUTH_PAGE })">Вход</div>
+            <div @click="$router.push({ name: AppRoutes.REG_PAGE })">
+                Регистрация
+            </div>
         </div>
         <div v-else class="navbar__links"><div @click="logout">Выйти</div></div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { useNavbar } from '@/hooks/useNavbar';
+import router from '@/router/router';
+import { AppRoutes } from '@/shared/consts/router';
+import { useStore } from '@/store';
+import { computed } from 'vue';
 import MyLogo from './MyLogo.vue';
 
-const { isAuth, logout } = useNavbar();
+const store = useStore();
+const isAuth = computed(() => store.getters['auth/getIsAuth']);
+
+const logout = () => {
+    store.commit('auth/setLogout');
+    router.push({ name: AppRoutes.AUTH_PAGE });
+};
 </script>
 
 <style scoped>

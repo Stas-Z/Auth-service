@@ -9,11 +9,12 @@
 <script lang="ts" setup>
 import router from '@/router/router';
 import { useStore } from '@/store';
+import { AppRoutes } from '../shared/consts/router';
 
 const store = useStore();
 const logout = () => {
     store.commit('auth/setLogout');
-    router.push('/auth');
+    router.push({ name: AppRoutes.AUTH_PAGE });
 };
 </script>
 

@@ -14,10 +14,12 @@ function getApiUrl(mode, apiUrl) {
 module.exports = defineConfig(() => {
     const mode = process.env.NODE_ENV || 'development';
     const apiUrl = getApiUrl(mode, process.env.VUE_APP_API_URL);
+    const isDev = mode === 'development';
 
     return {
         transpileDependencies: true,
         configureWebpack: {
+            devtool: isDev ? 'inline-source-map' : undefined,
             plugins: [
                 new webpack.DefinePlugin({
                     __VUE_PROD_HYDRATION_MISMATCH_DETAILS__:

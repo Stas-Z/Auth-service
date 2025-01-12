@@ -1,29 +1,7 @@
-import AuthPage from '@/pages/AuthPage.vue';
-import MainPage from '@/pages/MainPage.vue';
-import RegPage from '@/pages/RegPage.vue';
+import { routes } from '@/router/routeConfig';
+import { AppRoutes } from '@/shared/consts/router';
 import store from '@/store';
 import { createRouter, createWebHistory } from 'vue-router';
-
-const routes = [
-    {
-        path: '/',
-        component: MainPage,
-        name: 'MainPage',
-        meta: {
-            requiresAuth: true,
-        },
-    },
-    {
-        path: '/auth',
-        name: 'Login',
-        component: AuthPage,
-    },
-    {
-        path: '/registration',
-        name: 'Registration',
-        component: RegPage,
-    },
-];
 
 const router = createRouter({
     routes,
@@ -39,7 +17,7 @@ router.beforeEach((to, from, next) => {
     }
 
     if (to.meta.requiresAuth && !isAuthenticated) {
-        next({ name: 'Login' });
+        next({ name: AppRoutes.AUTH_PAGE });
     } else {
         next();
     }

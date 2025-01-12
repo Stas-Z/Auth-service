@@ -1,5 +1,6 @@
 import router from '@/router/router';
 import { $api } from '@/shared/api/api';
+import { AppRoutes } from '@/shared/consts/router';
 import { useStore } from '@/store';
 import { IUser } from '@/types/user';
 import { AxiosError } from 'axios';
@@ -22,7 +23,7 @@ export function useSubmit(formState: Ref<IUser>) {
             store.commit('auth/setCurentUser', response.data);
 
             setTimeout(() => {
-                router.push({ name: 'MainPage' });
+                router.push({ name: AppRoutes.MAIN_PAGE });
             }, 1000);
         } catch (error: any) {
             if (error instanceof AxiosError) {
@@ -49,7 +50,7 @@ export function useSubmit(formState: Ref<IUser>) {
             store.commit('auth/setCurentUser', response.data);
 
             setTimeout(() => {
-                router.push({ name: 'MainPage' });
+                router.push({ name: AppRoutes.MAIN_PAGE });
             }, 1500);
         } catch (error: any) {
             if (error instanceof AxiosError) {
