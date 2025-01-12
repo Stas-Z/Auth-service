@@ -20,12 +20,7 @@
         <a-form-item
             label="Email"
             name="email"
-            :rules="[
-                {
-                    required: true,
-                    message: 'Пожалуйста введите email!',
-                },
-            ]"
+            :rules="[{ required: true, message: 'Пожалуйста введите email!' }]"
         >
             <a-input v-focus v-model:value="formState.email" />
         </a-form-item>
@@ -33,17 +28,16 @@
         <a-form-item
             label="Пароль"
             name="password"
-            :rules="[
-                {
-                    required: true,
-                    message: 'Пожалуйста введите пароль',
-                },
-            ]"
+            :rules="[{ required: true, message: 'Пожалуйста введите пароль' }]"
         >
             <a-input-password v-model:value="formState.password" />
         </a-form-item>
 
-        <a-form-item label="Капча" name="captcha" :rules="[{ required: true }]">
+        <a-form-item
+            label="Капча"
+            name="captcha"
+            :rules="[{ required: true, message: 'Пожалуйста введите капчу' }]"
+        >
             <my-captcha
                 v-model:is-valid="isCaptchaValid"
                 v-model:captcha-input="formState.captchaInput"
