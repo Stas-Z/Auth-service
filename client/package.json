@@ -5,7 +5,7 @@
     "scripts": {
         "serve": "vue-cli-service serve --mode development",
         "build": "vue-cli-service build --mode production",
-        "build:prod:server": "cross-env VUE_APP_API_URL=https://server-todoapp-6oxg.onrender.com/api vue-cli-service build --mode production"
+        "build:prod:server": "cross-env VUE_APP_API_URL=https://server.com/api vue-cli-service build --mode production"
     },
     "dependencies": {
         "@ant-design/icons-vue": "^7.0.1",
